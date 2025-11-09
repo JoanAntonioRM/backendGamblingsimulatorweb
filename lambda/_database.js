@@ -1,4 +1,4 @@
-// lambda/_database.js - Enhanced with better error handling
+// lambda/_database.js - Optimized for Supabase Connection Pooler
 const { Pool } = require('pg');
 
 let pool;
@@ -16,9 +16,10 @@ function getPool() {
       ssl: { 
         rejectUnauthorized: false 
       },
-      max: 1,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000, // Increased from 2000
+      // Optimized settings for Supabase pooler
+      max: 1, // Keep at 1 for serverless
+      idleTimeoutMillis: 0, // Disable idle timeout with pooler
+      connectionTimeoutMillis: 10000,
     });
 
     // Add error handler
@@ -32,7 +33,7 @@ function getPool() {
 async function query(text, params) {
   const pool = getPool();
   try {
-    console.log('Executing query:', text.substring(0, 50)); // Log query start
+    console.log('Executing query:', text.substring(0, 50));
     const result = await pool.query(text, params);
     console.log('Query successful');
     return result;
