@@ -1,0 +1,142 @@
+service: casino-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'prod'}
+  region: us-east-2
+  memorySize: 256
+  timeout: 29  # Changed from 30 to 29 to avoid warning
+  environment:
+    # These will be loaded from .env file during deployment
+    DATABASE_URL: ${env:DATABASE_URL}
+    JWT_SECRET: ${env:JWT_SECRET}
+  httpApi:
+    cors:
+      allowedOrigins:
+        - https://gamblingsimulator.vercel.app
+        - http://localhost:3000
+        - http://localhost:5500
+        - http://127.0.0.1:5500
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+      allowCredentials: true
+
+functions:
+  # Health Check
+  health:
+    handler: lambda/health.handler
+    events:
+      - httpApi:
+          path: /api/health
+          method: GET
+
+  # Auth Endpoints
+  register:
+    handler: lambda/auth/register.handler
+    events:
+      - httpApi:
+          path: /api/auth/register
+          method: POST
+
+  login:
+    handler: lambda/auth/login.handler
+    events:
+      - httpApi:
+          path: /api/auth/login
+          method: POST
+
+  forgotPassword:
+    handler: lambda/auth/forgot-password.handler
+    events:
+      - httpApi:
+          path: /api/auth/forgot-password
+          method: POST
+
+  resetPassword:
+    handler: lambda/auth/reset-password.handler
+    events:
+      - httpApi:
+          path: /api/auth/reset-password
+          method: POST
+
+  # User Endpoints
+  profile:
+    handler: lambda/user/profile.handler
+    events:
+      - httpApi:
+          path: /api/user/profile
+          method: GET
+
+  balance:
+    handler: lambda/user/balance.handler
+    events:
+      - httpApi:
+          path: /api/user/balance
+          method: POST
+
+  addFunds:
+    handler: lambda/user/add-funds.handler
+    events:
+      - httpApi:
+          path: /api/user/add-funds
+          method: POST
+
+  updateXP:
+    handler: lambda/user/xp.handler
+    events:
+      - httpApi:
+          path: /api/user/xp
+          method: POST
+
+  deleteAccount:
+    handler: lambda/user/delete-account.handler
+    events:
+      - httpApi:
+          path: /api/user/delete-account
+          method: DELETE
+
+  # Game Endpoints
+  gameStats:
+    handler: lambda/game/stats.handler
+    events:
+      - httpApi:
+          path: /api/game/stats
+          method: POST
+
+  leaderboard:
+    handler: lambda/leaderboard/game.handler
+    events:
+      - httpApi:
+          path: /api/leaderboard/{game}
+          method: GET
+
+plugins:
+  - serverless-offline
+
+package:
+  exclude:
+    - node_modules/**
+    - .git/**
+    - .env
+    - README.md
+  include:
+    - lambda/**
+    - node_modules/pg/**
+    - node_modules/bcryptjs/**
+    - node_modules/jsonwebtoken/**
+
+# Custom configuration for serverless-offline
+custom:
+  serverless-offline:
+    httpPort: 3000
+    environment:
+      DATABASE_URL: ${env:DATABASE_URL}
+      JWT_SECRET: ${env:JWT_SECRET}

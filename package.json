@@ -1,0 +1,26 @@
+{
+  "name": "casino-backend-lambda",
+  "version": "1.0.0",
+  "description": "Casino Simulator Backend on AWS Lambda",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "deploy:prod": "serverless deploy --stage prod",
+    "deploy:dev": "serverless deploy --stage dev",
+    "remove": "serverless remove",
+    "logs": "serverless logs -f",
+    "offline": "serverless offline start",
+    "test": "node test-local.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
