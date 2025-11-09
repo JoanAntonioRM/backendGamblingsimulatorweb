@@ -6,9 +6,8 @@ provider:
   stage: ${opt:stage, 'prod'}
   region: us-east-2
   memorySize: 256
-  timeout: 29  # Changed from 30 to 29 to avoid warning
+  timeout: 29
   environment:
-    # These will be loaded from .env file during deployment
     DATABASE_URL: ${env:DATABASE_URL}
     JWT_SECRET: ${env:JWT_SECRET}
   httpApi:
@@ -121,19 +120,18 @@ functions:
 plugins:
   - serverless-offline
 
+# FIXED: Simplified package configuration
 package:
-  exclude:
-    - node_modules/**
-    - .git/**
-    - .env
-    - README.md
-  include:
-    - lambda/**
-    - node_modules/pg/**
-    - node_modules/bcryptjs/**
-    - node_modules/jsonwebtoken/**
+  patterns:
+    - '!.git/**'
+    - '!.env'
+    - '!README.md'
+    - '!.gitignore'
+    - '!.serverless/**'
+    - '!gambling-simulator/**'
+    - 'lambda/**'
+    - 'node_modules/**'
 
-# Custom configuration for serverless-offline
 custom:
   serverless-offline:
     httpPort: 3000
