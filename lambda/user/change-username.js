@@ -12,12 +12,23 @@ module.exports.handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
     const { newUsername, password } = body;
 
+    console.log('Change username request:', { userId: auth.user.id, newUsername });
+
     if (!validateUsername(newUsername)) {
       return createResponse(400, { error: 'Invalid username format' });
     }
 
+    if (!password) {
+      return createResponse(400, { error: 'Password is required' });
+    }
+
     // Verify password
     const userResult = await query('SELECT password FROM users WHERE id = $1', [auth.user.id]);
+    
+    if (userResult.rows.length === 0) {
+      return createResponse(404, { error: 'User not found' });
+    }
+
     const validPassword = await bcrypt.compare(password, userResult.rows[0].password);
     
     if (!validPassword) {
@@ -33,9 +44,10 @@ module.exports.handler = async (event) => {
     // Update username
     await query('UPDATE users SET username = $1 WHERE id = $2', [newUsername, auth.user.id]);
 
+    console.log('Username updated successfully');
     return createResponse(200, { success: true });
   } catch (error) {
     console.error('Change username error:', error);
-    return createResponse(500, { error: 'Server error' });
+    return createResponse(500, { error: 'Server error: ' + error.message });
   }
 };

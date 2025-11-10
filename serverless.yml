@@ -102,7 +102,7 @@ functions:
           path: /api/user/account
           method: DELETE
 
-  # NEW: Settings Endpoints
+  # Settings Endpoints
   changeUsername:
     handler: lambda/user/change-username.handler
     events:
@@ -132,11 +132,20 @@ functions:
           path: /api/game/stats
           method: POST
 
+  # Leaderboard Endpoints
   leaderboard:
     handler: lambda/leaderboard/game.handler
     events:
       - httpApi:
           path: /api/leaderboard/{game}
+          method: GET
+
+  # NEW: XP Leaderboard
+  xpLeaderboard:
+    handler: lambda/leaderboard/xp.handler
+    events:
+      - httpApi:
+          path: /api/leaderboard/xp
           method: GET
 
 plugins:
