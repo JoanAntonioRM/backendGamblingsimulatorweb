@@ -99,8 +99,30 @@ functions:
     handler: lambda/user/delete-account.handler
     events:
       - httpApi:
-          path: /api/user/delete-account
+          path: /api/user/account
           method: DELETE
+
+  # NEW: Settings Endpoints
+  changeUsername:
+    handler: lambda/user/change-username.handler
+    events:
+      - httpApi:
+          path: /api/user/change-username
+          method: POST
+
+  changePassword:
+    handler: lambda/user/change-password.handler
+    events:
+      - httpApi:
+          path: /api/user/change-password
+          method: POST
+
+  changeEmail:
+    handler: lambda/user/change-email.handler
+    events:
+      - httpApi:
+          path: /api/user/change-email
+          method: POST
 
   # Game Endpoints
   gameStats:
@@ -120,7 +142,6 @@ functions:
 plugins:
   - serverless-offline
 
-# FIXED: Simplified package configuration
 package:
   patterns:
     - '!.git/**'

@@ -10,12 +10,15 @@ module.exports.handler = async (event) => {
       return createResponse(400, { error: 'Invalid game' });
     }
 
+    // For cases, order by profit instead of wins
+    const orderBy = game === 'cases' ? 'g.total_profit' : 'g.won';
+
     const result = await query(
-      `SELECT u.username, g.won 
+      `SELECT u.username, g.won, g.total_profit 
        FROM game_stats g 
        JOIN users u ON g.user_id = u.id 
        WHERE g.game = $1 
-       ORDER BY g.won DESC 
+       ORDER BY ${orderBy} DESC 
        LIMIT 25`,
       [game]
     );

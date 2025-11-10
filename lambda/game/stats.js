@@ -18,14 +18,16 @@ module.exports.handler = async (event) => {
 
     const wonValue = won ? 1 : 0;
     const lostValue = won ? 0 : 1;
+    const profit = winAmount - betAmount;
 
     await query(
       `UPDATE game_stats SET 
         played = played + 1,
         won = won + $1,
-        lost = lost + $2
-       WHERE user_id = $3 AND game = $4`,
-      [wonValue, lostValue, auth.user.id, game]
+        lost = lost + $2,
+        total_profit = total_profit + $3
+       WHERE user_id = $4 AND game = $5`,
+      [wonValue, lostValue, profit, auth.user.id, game]
     );
 
     const wonAmount = won ? winAmount : 0;

@@ -21,7 +21,8 @@ module.exports.handler = async (event) => {
       games[stat.game] = {
         played: stat.played,
         won: stat.won,
-        lost: stat.lost
+        lost: stat.lost,
+        profit: parseFloat(stat.total_profit || 0)
       };
     });
 
@@ -30,6 +31,7 @@ module.exports.handler = async (event) => {
     return createResponse(200, {
       id: user.id,
       username: user.username,
+      email: user.email || null,
       balance: parseFloat(user.balance),
       xp: user.xp,
       shopPoints: user.shop_points,
