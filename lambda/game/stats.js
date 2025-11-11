@@ -11,7 +11,7 @@ module.exports.handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
     const { game, won, betAmount, winAmount } = body;
 
-    const validGames = ['crash', 'dice', 'blackjack', 'plinko', 'mines', 'cases'];
+    const validGames = ['crash', 'dice', 'blackjack', 'plinko', 'mines', 'cases', 'roulette', 'cardpacks'];
     if (!validGames.includes(game)) {
       return createResponse(400, { error: 'Invalid game' });
     }

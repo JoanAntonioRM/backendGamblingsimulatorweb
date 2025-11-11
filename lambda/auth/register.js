@@ -37,7 +37,7 @@ module.exports.handler = async (event) => {
     const userId = result.rows[0].id;
 
     // Initialize game stats
-    const games = ['crash', 'dice', 'blackjack', 'plinko', 'mines', 'cases'];
+    const games = ['crash', 'dice', 'blackjack', 'plinko', 'mines', 'cases', 'roulette', 'cardpacks'];
     for (const game of games) {
       await query('INSERT INTO game_stats (user_id, game) VALUES ($1, $2)', [userId, game]);
     }

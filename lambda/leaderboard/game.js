@@ -4,7 +4,7 @@ const { createResponse } = require('../_utils');
 module.exports.handler = async (event) => {
   try {
     const game = event.pathParameters?.game;
-    const validGames = ['crash', 'dice', 'blackjack', 'plinko', 'mines', 'cases'];
+    const validGames = ['crash', 'dice', 'blackjack', 'plinko', 'mines', 'cases', 'roulette', 'cardpacks'];
     
     if (!validGames.includes(game)) {
       return createResponse(400, { error: 'Invalid game' });
