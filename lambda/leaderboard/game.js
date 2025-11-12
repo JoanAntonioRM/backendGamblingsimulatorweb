@@ -4,14 +4,17 @@ const { createResponse } = require('../_utils');
 module.exports.handler = async (event) => {
   try {
     const game = event.pathParameters?.game;
+    
+    // UPDATED: Include roulette and cardpacks
     const validGames = ['crash', 'dice', 'blackjack', 'plinko', 'mines', 'cases', 'roulette', 'cardpacks'];
     
     if (!validGames.includes(game)) {
       return createResponse(400, { error: 'Invalid game' });
     }
 
-    // For cases, order by profit instead of wins
-    const orderBy = game === 'cases' ? 'g.total_profit' : 'g.won';
+    // For cases, roulette, and cardpacks, order by profit instead of wins
+    const profitBasedGames = ['cases', 'roulette', 'cardpacks'];
+    const orderBy = profitBasedGames.includes(game) ? 'g.total_profit' : 'g.won';
 
     const result = await query(
       `SELECT u.username, g.won, g.total_profit 
